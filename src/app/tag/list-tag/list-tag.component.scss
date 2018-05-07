@@ -1,0 +1,32 @@
+ul {
+  display: block;
+  font-size: 17px;
+  list-style: none;
+  //margin-bottom: 20px;
+  .row {
+    border-bottom: 2px solid #f4f4f4;
+    height: 76px;
+    display: block;
+    padding: 2px 0;
+    li {
+      font-weight: bold;
+      display: inline-block;
+      height: 100%;
+      position: relative;
+      line-height: 54px;
+      text-align: center;
+      i {
+        padding-right: 5px;
+      }
+    }
+  }
+}
+
+i {
+  cursor: pointer;
+}
+
+input {
+  color: black;
+  width: 100%;
+}

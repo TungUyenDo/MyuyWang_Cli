@@ -1,0 +1,167 @@
+<section class="content">
+  <div class="row">
+    <!-- Recent Login Member-->
+    <div class="col-md-6" style="margin-top: 25px">
+      <div class="box box-danger">
+        <div class="box-header with-border">
+          <h3 class="box-title">Recent Login Members</h3>
+
+          <div class="box-tools pull-right">
+            <!--<span class="label label-danger">8 New Members</span>-->
+            <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+            </button>
+            <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i>
+            </button>
+          </div>
+        </div>
+        <!-- /.box-header -->
+        <div class="box-body no-padding">
+          <ul class="users-list clearfix">
+            <li class="col-md-4" *ngFor="let member of recentLoginMember">
+              <img src="{{member.avatar}}" alt="User Image">
+              <a class="users-list-name" href="#">{{member.name}}</a>
+              <span class="users-list-date">{{member.loginAt}}</span>
+            </li>
+
+          </ul>
+          <!-- /.users-list -->
+        </div>
+        <!-- /.box-body -->
+        <div class="box-footer text-center">
+          <a routerLink="/member" class="uppercase">View All Member</a>
+        </div>
+        <!-- /.box-footer -->
+      </div>
+
+    </div>
+
+    <!--Social Usage Doughnut Chart-->
+    <div class="col-md-6" style="margin-top: 25px;">
+      <div class="box box-default">
+        <div class="box-header with-border">
+          <h3 class="box-title">Social Usage</h3>
+
+          <div class="box-tools pull-right">
+            <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+            </button>
+            <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+          </div>
+        </div>
+        <!-- /.box-header -->
+        <div class="box-body">
+          <div class="row">
+            <div class="col-md-8">
+              <div class="chart-responsive">
+                <div style="display: block">
+                  <canvas baseChart
+                          [data]="socialDoughnutChartData"
+                          [labels]="socialDoughnutChartLabels"
+                          [chartType]="socialDoughnutChartType"
+                          (chartHover)="chartHovered($event)"
+                          (chartClick)="chartClicked($event)"
+                          [colors]="socialDoughnutChartColors"
+                  ></canvas>
+                </div>
+              </div>
+
+            </div>
+            <!-- /.col -->
+            <div class="col-md-4">
+              <ul class="chart-legend clearfix">
+                <li><i class="fa fa-circle-o" style="color: #3b5999 "></i> Facebook: {{socialDoughnutChartData[0]}}</li>
+                <li><i class="fa fa-circle-o" style="color: #d62d20 "></i> Google: {{socialDoughnutChartData[1]}}</li>
+              </ul>
+            </div>
+            <!-- /.col -->
+          </div>
+          <!-- /.row -->
+        </div>
+        <!-- /.box-body -->
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+
+    <!-- Recent Add Video-->
+    <div class="col-md-6" style="margin-top: 25px">
+      <div class="box box-danger">
+        <div class="box-header with-border">
+          <h3 class="box-title">Recent Added Videos</h3>
+
+          <div class="box-tools pull-right">
+            <!--<span class="label label-danger">8 New Members</span>-->
+            <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+            </button>
+            <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i>
+            </button>
+          </div>
+        </div>
+        <!-- /.box-header -->
+        <div class="box-body no-padding">
+          <ul class="row user-list">
+            <li class="col-md-6" *ngFor="let video of recentAddedVideo">
+              <img class="img-responsive" src="{{video.poster}}" alt="User Image">
+              <a class="users-list-name" href="#" [innerHTML]="resSwitchLanguage === 'en' ? video.title.en :  video.title.cn"></a>
+              <span class="users-list-date">{{video.createdAt}}</span>
+            </li>
+          </ul>
+          <!-- /.users-list -->
+        </div>
+        <!-- /.box-body -->
+        <div class="box-footer text-center">
+          <a routerLink="/video" class="uppercase">View All Video</a>
+        </div>
+        <!-- /.box-footer -->
+      </div>
+
+    </div>
+
+    <!--Total Video Doughnut Chart-->
+    <div class="col-md-6" style="margin-top: 25px;">
+      <div class="box box-default">
+        <div class="box-header with-border">
+          <h3 class="box-title">Total Video: {{totalVideo}}</h3>
+
+          <div class="box-tools pull-right">
+            <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+            </button>
+            <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+          </div>
+        </div>
+        <!-- /.box-header -->
+        <div class="box-body">
+          <div class="row">
+            <div class="col-md-8">
+              <div class="chart-responsive">
+                <div style="display: block">
+                  <canvas baseChart
+                          [data]="videoDoughnutChartData"
+                          [labels]="videoDoughnutChartLabels"
+                          [chartType]="videoDoughnutChartType"
+                          (chartHover)="chartHovered($event)"
+                          (chartClick)="chartClicked($event)"
+                          [colors]="videoDoughnutChartColors"
+                  ></canvas>
+                </div>
+              </div>
+
+            </div>
+            <!-- /.col -->
+            <div class="col-md-4">
+              <ul class="chart-legend clearfix">
+                <li><i class="fa fa-circle-o" style="color: green "></i> Active: {{videoDoughnutChartData[0]}}</li>
+                <li><i class="fa fa-circle-o" style="color: gray "></i> Inactive: {{videoDoughnutChartData[1]}}</li>
+              </ul>
+            </div>
+            <!-- /.col -->
+          </div>
+          <!-- /.row -->
+        </div>
+        <!-- /.box-body -->
+      </div>
+    </div>
+
+  </div>
+
+</section>

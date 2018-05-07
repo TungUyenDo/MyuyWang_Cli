@@ -1,0 +1,115 @@
+<section class="content-header">
+	<h1>
+		{{ 'Update Profile' | translate }}
+	</h1>
+	<ol class="breadcrumb">
+		<li>
+			<a routerLink="">
+				<i class="fa fa-dashboard"></i>{{ 'Home' | translate }}</a>
+		</li>
+		<li class="active">{{ 'Update Profile' | translate }}</li>
+	</ol>
+</section>
+
+<!-- Main content -->
+<section class="content dashboard-page">
+	<div class="row">
+		<div class="col-xs-12 col-sm-6 col-md-5">
+			<form #updateProfile="ngForm" (submit)='onSubmitUpdateProfile()'>
+				<div class="box box-primary">
+					<div class="overlay" [hidden]="!loading.updateProfile">
+						<i class="fa fa-refresh fa-spin"></i>
+					</div>
+					<div class="box-header with-border">
+						<h4>{{ 'Update Pofile' | translate }}</h4>
+					</div>
+					<div class="box-body">
+						<div class="callout"  [ngClass]="{'callout-danger': message.profile.status == 'error' , 'callout-success': message.profile.status == 'success' }" *ngIf="message.profile.display">
+							<h4 *ngIf="message.profile.status == 'error' ">Error!</h4>
+							<h4 *ngIf="message.profile.status == 'success' ">Success</h4>
+							<p [innerHTML]="message.profile.text"></p>
+						</div>
+						<div class="row">
+							<div class="col-xs-12">
+								<div class="form-group" [ngClass]="{'has-error': !email.valid && email.dirty}">
+									<label>{{ 'Email' | translate }}</label>
+									<input type="email" class="form-control" placeholder="Enter Email"
+										required
+										name="email"
+										[(ngModel)]="user.email"
+										#email="ngModel">
+									<div [hidden]="email.valid || !email.dirty" class="help-block">this field is required</div>
+								</div>
+							</div>
+							<div class="col-xs-12" >
+								<div class="form-group" [ngClass]="{'has-error': !firstName.valid && firstName.dirty}">
+									<label>{{ 'First Name' | translate }}</label>
+									<input type="text" class="form-control" placeholder="Enter Frist Name"
+										required
+										name="firstName"
+										[(ngModel)]="user.firstName"
+										#firstName="ngModel">
+									<div [hidden]="firstName.valid || !firstName.dirty" class="help-block">this field is required</div>
+								</div>
+							</div>
+							<div class="col-xs-12">
+								<div class="form-group"  [ngClass]="{'has-error': !lastName.valid && lastName.dirty}">
+									<label>{{ 'Last Name' | translate }}</label>
+									<input type="text" class="form-control" placeholder="Enter Last Name"
+										required
+										name="lastName"
+										[(ngModel)]="user.lastName"
+										#lastName="ngModel">
+									<div [hidden]="lastName.valid || !lastName.dirty" class="help-block">this field is required</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="box-footer">
+						<button type="submit" [disabled]="!updateProfile.form.valid"  class="btn btn-primary">{{ 'Update' | translate }}</button>
+					</div>
+				</div>
+			</form>
+		</div>
+		<div class="col-xs-12 col-sm-6 col-md-5">
+			<form [formGroup]="editUserForm" (submit)="onSubmitUpdatePassword(editUserForm)">
+				<div class="box box-primary">
+					<div class="overlay" [hidden]="!loading.changePassword">
+						<i class="fa fa-refresh fa-spin"></i>
+					</div>
+					<div class="box-header with-border">
+						<h4>{{ 'Change Password' | translate }}</h4>
+					</div>
+					<div class="box-body">
+						<div class="callout"  [ngClass]="{'callout-danger': message.password.status == 'error' , 'callout-success': message.password.status == 'success' }" *ngIf="message.password.display">
+							<h4 *ngIf="message.password.status == 'error' ">Error!</h4>
+							<h4 *ngIf="message.password.status == 'success' ">Success</h4>
+							<p [innerHTML]="message.password.text"></p>
+						</div>
+						<div class="row">
+							<div class="col-xs-12">
+								<div class="form-group" [ngClass]="{'has-error': editUserForm.controls.password.invalid && editUserForm.controls.password.dirty }">
+									<label>{{ 'Password' | translate }}</label>
+									<input type="password" class="form-control" placeholder="Enter Password" formControlName="password">
+									<div [hidden]="editUserForm.controls.password.valid || !editUserForm.controls.password.dirty" class="help-block">this field is required</div>
+								</div>
+							</div>
+							<div class="col-xs-12">
+								<div class="form-group" [ngClass]="{'has-error': (editUserForm.controls.confirmPassword.invalid  || editUserForm.errors?.confirmPassword ) && editUserForm.controls.confirmPassword.dirty}"> 
+									<label>{{ 'Confirm Password' | translate }}</label>
+									<input type="password" class="form-control" placeholder="Confirm Password"
+									formControlName="confirmPassword">
+									<div [hidden]="!editUserForm.controls.confirmPassword.errors?.required || !editUserForm.controls.confirmPassword.dirty" class="help-block">this field is required</div>
+									<div [hidden]="!editUserForm.errors?.confirmPassword || editUserForm.controls.confirmPassword.errors?.required || !editUserForm.controls.confirmPassword.dirty" class="help-block">Confirmation password do not match</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="box-footer">
+						<button type="submit"  [disabled]="editUserForm.invalid" class="btn btn-primary">{{'Update' | translate}}</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</section>

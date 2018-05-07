@@ -1,0 +1,66 @@
+<section class="content-header">
+    <h1>{{ "Upload Video" | translate }}</h1>
+    <ol class="breadcrumb">
+      <li>
+        <a routerLink="/video">
+          <i class="fa fa-dashboard"></i> {{ "Videos" | translate }}</a>
+      </li>
+      <li class="active">{{ "Upload Video" | translate }}</li>
+    </ol>
+  </section>
+  <section class="content">
+    <div class="box box-primary">
+      <div class="box-body">
+        <div class="callout" style="margin-top:20px;" [ngClass]="{'callout-danger': message.status == 'error' , 'callout-success': message.status == 'success' }"
+          *ngIf="message.display">
+          <h4 *ngIf="message.status == 'error' ">Error!</h4>
+          <h4 *ngIf="message.status == 'success' ">Success</h4>
+          <p [innerHTML]="message.text"></p>
+        </div> 
+        <form role="form" #uploadVideoForm="ngForm">
+          <div class="form-group" [ngClass]="{'has-error': ( (!title.valid && title.dirty)  || !nameVideoValidate ) &&  !loading}">
+            <label>Video name:</label> 
+            <div>
+              <label>Video name allowed characters: a-z ,number and -</label>
+            </div>
+            <input [disabled]="loading" style="margin-bottom:10px" type="text" class="form-control"  required name="title" (keyup)="onChangeNameVideo()" [(ngModel)]="uploadVideo.title" #title="ngModel"/>
+            <div [hidden]=" (title.valid || !title.dirty) ||  loading" class="help-block">{{"This field is required" | translate}}</div>
+            <span [hidden]="nameVideoValidate || !(title.valid || !title.dirty)" class="help-block">This video name invalid!</span>
+          </div>  
+          <div style="width:100%;height:300px;background:#ddd;position:relative;">
+            <div class="overlay" [hidden]="!loading" 
+            style="position: absolute;
+              top: 0;
+              left: 0;
+              width: 100%;
+              height: 100%;">
+              <i class="fa fa-refresh fa-spin"></i>
+            </div>
+            <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;">
+              <div [hidden]="fileSelected">
+                <label class="btn btn-primary" for="fileupload">Select video to upload <i style="margin-left:5px;" class="fa fa-upload" aria-hidden="true"></i></label>
+              </div>
+              <div [hidden]="!fileSelected">
+                  <div>
+                    <label style="margin-top:10px;" [innerText]="fileName"></label>
+                  </div>
+                  <button class="btn btn-primary" style="margin:5px;" (click)="onUploadVideo()" [disabled]="!uploadVideoForm.valid || !nameVideoValidate">Upload</button>
+                  <button class="btn btn-danger" style="margin:5px" (click)="fileSelected = false;myInputVariable.nativeElement.value ='' ">Cancel</button>
+              </div>
+            </div>
+          </div>
+          <input #myInput style="display: none" type="file" id="fileupload"  (change)="fileChange($event)"  accept=".mp4, .mov"/>
+          <div class="progress">
+            <div class="progress-bar progress-bar-primary progress-bar-striped" 
+              role="progressbar" 
+              aria-valuemin="0" 
+              aria-valuemax="100" 
+              [ngStyle]="{ 'width' :processing}"> 
+              {{processing}}
+            </div>
+          </div> 
+        </form>
+      </div>
+    </div>
+  </section>
+  

@@ -1,0 +1,97 @@
+<section class="content-header">
+  <h1>
+    {{ "FAQ" | translate }}
+  </h1>
+  <ol class="breadcrumb">
+      <li><a routerLink="/faq"><i class="fa fa-dashboard"></i>{{ "FAQ" | translate }}</a></li>
+      <li *ngIf="type == 'create' "class="active"> {{ "Create FAQ" | translate }}</li>
+      <li *ngIf="type == 'edit' " class="active">{{ "Edit FAQ" | translate }}</li>
+  </ol>
+</section>
+
+<section class="content dashboard-page">
+  <form #faqForm="ngForm">
+      <div class="row">
+          <div class="col-xs-12">
+              <div class="box nav-tabs-custom" style="border-top:none">
+                <ul class="nav nav-tabs">
+                    <li class="active" (click)="languageTabs = 'english' "><a href="#revenue-chart" data-toggle="tab" aria-expanded="true">English</a></li>
+                    <li class="" (click)="languageTabs = 'chinese' " ><a href="#sales-chart" data-toggle="tab" aria-expanded="false">Chinese</a></li>
+                </ul>
+                <div class="overlay" [hidden]="!loading">
+                    <i class="fa fa-refresh fa-spin"></i>
+                </div>
+                <div class="box-header with-border">
+                    <h4 *ngIf="type == 'create' " class="pull-left"> {{ "Create FAQ" | translate }}</h4>
+                    <h4 *ngIf="type == 'edit' " class="pull-left">{{ "Edit FAQ" | translate }}</h4>
+                </div>
+                <div class="box-body">
+                    <div class="callout"  [ngClass]="{'callout-danger': message.status == 'error' , 'callout-success': message.status == 'success' }" *ngIf="message.display">
+                        <h4 *ngIf="message.status == 'error' ">{{"Error!" | translate}}</h4>
+                        <h4 *ngIf="message.status == 'success' ">{{"Success" | translate}}</h4>
+                        <p [innerHTML]="message.text"></p>
+                    </div>
+                    <div class="row" [hidden]="languageTabs != 'english' ">
+                        <div class="col-xs-12">
+                            <div class="form-group" [ngClass]="{'has-error': !questionEn.valid && questionEn.dirty}">
+                                <label>Question (en)</label>
+                                <input type="text" class="form-control" placeholder="Enter Question..."
+                                    required
+                                    name="questionEn"
+                                    [(ngModel)]="faq.question.en"
+                                    #questionEn="ngModel"/>
+                                <div [hidden]="questionEn.valid || !questionEn.dirty" class="help-block">this field is required</div>
+                            </div>
+                        </div>
+                        <div class="col-xs-12">
+                            <div class="form-group" [ngClass]="{'has-error': !answerEn.valid && answerEn.dirty}">
+                                <label>Answer (en)</label>
+                                <ckeditor required [config]="configCkEditor" debounce="500"
+                                      name="answerEn"
+                                      required
+                                      [(ngModel)]="faq.answer.en"
+                                      #answerEn="ngModel"></ckeditor>
+                                <div [hidden]="answerEn.valid || !answerEn.dirty" class="help-block">this field is required</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" [hidden]="languageTabs != 'chinese' "> 
+                        <div class="col-xs-12">
+                            <div class="form-group" [ngClass]="{'has-error': !questionCn.valid && questionCn.dirty}">
+                                <label>Question (cn)</label>
+                                <input type="text" class="form-control" placeholder="Enter Question..."
+                                    required
+                                    name="questionCn"
+                                    [(ngModel)]="faq.question.cn"
+                                    #questionCn="ngModel"/>
+                                <div [hidden]="questionCn.valid || !questionCn.dirty" class="help-block">this field is required</div>
+                            </div>
+                        </div>
+                        <div class="col-xs-12">
+                            <div class="form-group" [ngClass]="{'has-error': !answerCn.valid && answerCn.dirty}">
+                                <label>Answer (cn)</label>
+                                <ckeditor required [config]="configCkEditor" debounce="500"
+                                      name="answerCn"
+                                      required
+                                      [(ngModel)]="faq.answer.cn"
+                                      #answerCn="ngModel"></ckeditor>
+                                <div [hidden]="answerCn.valid || !answerCn.dirty" class="help-block">this field is required</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="box-footer">
+                    <button type="button" (click)="onSubmit()" [disabled]="!faqForm.form.valid || loading" class="btn btn-primary pull-left">
+                        <span *ngIf="type == 'create' ">{{ 'Submit' | translate}}</span>
+                        <span *ngIf="type == 'edit' ">{{ 'Update' | translate}}</span>
+                    </button>
+                    <a routerLink="/faq" class="btn btn-danger pull-right">
+                        {{ 'Cancel' | translate }}
+                    </a>
+                </div>
+              </div>
+          </div>
+      </div>
+  </form>
+</section>
+   

@@ -1,0 +1,396 @@
+<section class="content-header">
+  <h1>{{ "Video Detail" | translate }}</h1>
+  <ol class="breadcrumb">
+    <li>
+      <a routerLink="/video">
+        <i class="fa fa-dashboard"></i> {{ "Videos" | translate }}</a>
+    </li>
+    <li class="active">{{ "Video Detail" | translate }}</li>
+  </ol>
+</section>
+<section class="content">
+  <div class="row">
+    <div class="col-xs-12 col-md-8">
+      <form role="form" (ngSubmit)="updateVideo()" #updateForm="ngForm">
+        <div class="box nav-tabs-custom" style="border-top:none">
+          <ul class="nav nav-tabs">
+            <li class="active" (click)="languageTabs = 'english' "><a href="#revenue-chart" data-toggle="tab" aria-expanded="true">English</a></li>
+            <li class="" (click)="languageTabs = 'chinese' " ><a href="#sales-chart" data-toggle="tab" aria-expanded="false">Chinese</a></li>
+          </ul>
+          <div style="clear:both;margin-bottom:10px;"></div>
+          <div class="overlay" [hidden]="!loading.detail">
+            <i class="fa fa-refresh fa-spin"></i>
+          </div>
+          <div class="box-header">
+            <h3 class="box-title" [hidden]="isEdittingSlug" style="display:block;position:relative;padding-right:65px;">
+              {{ "Link Video" | translate }}:
+              <a target="_blank" href="{{pathUrlFrontEnd}}/video/{{videoDetail.slug}}" [ngStyle]="{'color': (videoDetail.slug) ? '' : '#a94442'}">
+                {{pathUrlFrontEnd}}/video/<span [innerHTML]="videoDetail.slug"></span>
+              </a>
+              <button type="button" (click)="isEdittingSlug = true;tempSlug = videoDetail.slug" class="btn btn-primary" style="position:absolute;top:0;right:0">{{"Edit" | translate}}</button>
+            </h3>
+            <div [hidden]="!isEdittingSlug"  [ngClass]="{'has-error': (!slug.valid && slug.dirty) || !slugValidate}">
+              <label>Slug allowed characters: a-z ,number and -</label>
+              <div class="input-group">
+                <span class="input-group-addon" style="cursor: not-allowed;background-color: #eee;">https://www.myyuwang.com/video/</span>
+                <input type="text" class="form-control" required name="slug" (keyup)="onChangeSlug()" [(ngModel)]="videoDetail.slug" #slug="ngModel" />
+              </div>
+              <div [hidden]="slug.valid || !slug.dirty" class="help-block">{{"This field is required" | translate}}</div>
+              <span [hidden]="slugValidate || !(slug.valid || !slug.dirty)" class="help-block">This slug invalid!</span>
+              <button type="button" (click)="isEdittingSlug = false ; videoDetail.slug = tempSlug" class="btn btn-danger pull-right" style="margin-top:10px">{{"Cancel" | translate}}</button>
+              <button type="button" [disabled]="(!slug.valid && slug.dirty) || !slugValidate" (click)="isEdittingSlug = false" class="btn btn-primary pull-right" style="margin-top:10px;margin-right:15px">{{"Change" | translate}}</button>
+            </div>
+          </div>
+
+          <div class="box-body">
+            <div class="form-group">
+              <a target="_blank" style="margin-right:10px" href="{{videoDetail.quality.FHD_360p}}">Link video 360p</a>
+              <span *ngIf="videoDetail.quality.FHD_480p">|</span>
+              <a target="_blank" style="margin-left:10px;margin-right:10px" href="{{videoDetail.quality.FHD_480p}}">Link video 480p</a>
+              <span *ngIf="videoDetail.quality.FHD_720p">|</span>
+              <a target="_blank" style="margin-left:10px;margin-right:10px" href="{{videoDetail.quality.FHD_720p}}">Link video 720p</a>
+              <span *ngIf="videoDetail.quality.FHD_1080p">|</span>
+              <a target="_blank" style="margin-left:10px;margin-right:10px" href="{{videoDetail.quality.FHD_1080p}}">Link video 1080p</a>
+            </div>
+            <div class="form-group">
+              <button type="button" class="btn btn-primary" (click)="onClickOpenModal()">Replace Video</button>
+            </div>
+            <div class="form-group">
+                <a target="_blank" class="btn btn-primary" href="{{changeHrefFacebookDebug(videoDetail.slug)}}">{{ 'Clear FB 1' | translate }}</a>
+                <a target="_blank" class="btn btn-primary" href="{{changeHrefFacebookDebug2(videoDetail.slug)}}">{{ 'Clear FB 2' | translate }}</a>
+								<a target="_blank" class="btn btn-primary" (click)="onClickClearCloundFont(videoDetail.slug)">{{ 'Clear Cache CloudFront' | translate }}</a>
+            </div>
+            <div class="callout" style="margin-top:20px;" [ngClass]="{'callout-danger': message.status == 'error' , 'callout-success': message.status == 'success' }"
+              *ngIf="message.display">
+              <h4 *ngIf="message.status == 'error' ">Error!</h4>
+              <h4 *ngIf="message.status == 'success' ">Success</h4>
+              <p [innerHTML]="message.text"></p>
+            </div>
+          </div>
+          <div class="box-body" [hidden]='languageTabs != "english" '>
+            <h3>Language English</h3>
+            <div class="row">
+              <div class="col-xs-12">
+                <div class="form-group" [ngClass]="{'has-error': !titleEn.valid && titleEn.dirty}">
+                  <label for="titleen">Title (en)</label>
+                  <ckeditor type="text" debounce="500" [config]="ckeditorConfig" required name="titleEn" [(ngModel)]="videoDetail.title.en"
+                  #titleEn="ngModel"></ckeditor>
+                  <div [hidden]="titleEn.valid || !titleEn.dirty" class="help-block">this field is required</div>
+                </div>
+                <div class="form-group" [ngClass]="{'has-error': !summaryEn.valid && summaryEn.dirty}">
+                  <label for="synopsisEn">synopsis (en)</label>
+                  <ckeditor type="text" debounce="500" [config]="ckeditorConfig" required name="summaryEn" [(ngModel)]="videoDetail.summary.en"
+                    #summaryEn="ngModel"></ckeditor>
+                  <div [hidden]="summaryEn.valid || !summaryEn.dirty" class="help-block">this field is required</div>
+                </div>
+                <div class="form-group" [ngClass]="{'has-error': !synopsisEn.valid && synopsisEn.dirty}">
+                  <label for="summaryen">Summary (en)</label>
+                  <ckeditor type="text" debounce="500" [config]="ckeditorConfig" required name="synopsisEn" [(ngModel)]="videoDetail.sypnosis.en"
+                    #synopsisEn="ngModel"></ckeditor>
+                  <div [hidden]="synopsisEn.valid || !synopsisEn.dirty" class="help-block">this field is required</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="box-body" [hidden]='languageTabs != "chinese" '>
+            <h3>Language Chinese</h3>
+            <div class="row">
+              <div class="col-xs-12">
+                <div class="form-group" [ngClass]="{'has-error': !titleCn.valid && titleCn.dirty}">
+                  <label for="title">Title (cn)</label>
+                  <ckeditor type="text" debounce="500" [config]="ckeditorConfig" required name="titleCn" [(ngModel)]="videoDetail.title.cn"
+                  #titleCn="ngModel"></ckeditor>
+                  <div [hidden]="titleCn.valid || !titleCn.dirty" class="help-block">{{"this field is required" | translate}}</div>
+                </div>
+                <div class="form-group" [ngClass]="{'has-error': !summarycn.valid && summarycn.dirty}">
+                  <label for="synopsisCn">synopsis (cn)</label>
+                  <ckeditor type="text" debounce="500" [config]="ckeditorConfig" required name="summarycn" [(ngModel)]="videoDetail.summary.cn"
+                    #summarycn="ngModel"></ckeditor>
+                  <div [hidden]="summarycn.valid || !summarycn.dirty" class="help-block">{{"this field is required" | translate}}</div>
+                </div>
+                <div class="form-group" [ngClass]="{'has-error': !synopsisCn.valid && synopsisCn.dirty}">
+                  <label for="summarycn">Summary (cn)</label>
+                  <ckeditor type="text" debounce="500" [config]="ckeditorConfig" required name="synopsisCn" [(ngModel)]="videoDetail.sypnosis.cn"
+                    #synopsisCn="ngModel"></ckeditor>
+                  <div [hidden]="synopsisCn.valid || !synopsisCn.dirty" class="help-block">{{"this field is required" | translate}}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="box-footer">
+            <button type="submit" [disabled]="!updateForm.form.valid" class="btn btn-primary">{{ 'Update' | translate }}</button>
+            <button type="button" (click)="onOpenDeleteVideo()" class="btn btn-danger pull-right">{{ 'Delete' | translate }}</button>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="col-xs-12 col-md-4">
+      <div class="row">
+        <div class="col-xs-12">
+          <div class="box box-primary">
+            <div class="overlay" [hidden]="!loading.detail">
+              <i class="fa fa-refresh fa-spin"></i>
+            </div>
+            <div class="box-body">
+              <div class="form-group">
+                <label>{{"Status" | translate}}</label>
+                <select class="form-control" [(ngModel)]='videoDetail.status'>
+                  <option [ngValue]="true">{{"Active" | translate}}</option>
+                  <option [ngValue]="false">{{"Inactive" | translate}}</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>{{"Type of Video" | translate}}</label>
+                <select class="form-control" [(ngModel)]='videoDetail.isPrivate'>
+                  <option value="0">{{"Public Video" | translate}}</option>
+                  <option value="1">{{"Private Video" | translate}}</option>
+                  <option value="2">{{"Partial Private video" | translate}}</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>{{"Trending" | translate}}</label>
+                <select class="form-control" [(ngModel)]='videoDetail.isTrending'>
+                  <option [ngValue]="true">{{"Yes" | translate}}</option>
+                  <option [ngValue]="false">{{"No" | translate}}</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-xs-12">
+          <div class="box box-primary" >
+            <div class="callout" style="margin-top:20px;" [ngClass]="{'callout-danger': messageViews.status == 'error' , 'callout-success': messageViews.status == 'success' }"
+              *ngIf="messageViews.display">
+              <h4 *ngIf="messageViews.status == 'error' ">Error!</h4>
+              <h4 *ngIf="messageViews.status == 'success' ">Success</h4>
+              <p [innerHTML]="messageViews.text"></p>
+            </div>
+            <div class="overlay" [hidden]="!loading.views">
+              <i class="fa fa-refresh fa-spin"></i>
+            </div>
+            <div class="box-body">
+                <div class="form-group" [ngClass]="{'has-error': !views.valid && views.dirty}">
+                  <label>{{ "Views" | translate }}</label>
+                  <input class="form-control" type="number" 
+                    (keypress)="onChangeView($event)" 
+                    [(ngModel)]='videoDetail.views'
+                    #views="ngModel"
+                    required
+                    name="views"/>
+                  <div [hidden]="views.valid || !views.dirty" class="help-block">{{"value incorrect" | translate}}</div>
+                </div>
+            </div>
+            <div class="box-footer">
+              <button type="button" class="btn btn-primary" [disabled]="!views.valid" (click)="onUpdateViews()">Update Views</button>
+              <button type="button" class="btn btn-danger pull-right" (click)="videoDetail.views = videoDetail.tempViews">Reset Views</button>
+            </div>
+          </div>
+        </div>
+        <div class="col-xs-12 ">
+          <div class="box box-primary">
+            <div [hidden]="messageImage.type != 'poster' " class="callout" [ngClass]="{'callout-danger': messageImage.status == 'error' , 'callout-success': messageImage.status == 'success' }"
+              *ngIf="messageImage.display">
+              <h4 *ngIf="messageImage.status == 'error' ">Error!</h4>
+              <h4 *ngIf="messageImage.status == 'success' ">Success</h4>
+              <p [innerHTML]="messageImage.text"></p>
+            </div>
+            <div class="overlay" [hidden]="!loading.poster && !loading.detail">
+              <i class="fa fa-refresh fa-spin"></i>
+            </div>
+            <div class="box-header">
+              <h3 class="box-title">{{"Upload Poster" | translate}}</h3>
+            </div>
+            <div class="box-body">
+              <label>Preview individual Poster - size to be ({{environment.sizePoster.width}}x{{environment.sizePoster.height}}) 2MB</label>			  
+              <div class="form-group" style="text-align: center">
+                <img-cropper [hidden]="!edittingPoster" #cropper [image]="data" [settings]="cropperSettings"></img-cropper>
+              </div>
+              <div class="form-group">
+                <img [hidden]="edittingPoster" [src]="videoDetail.poster" alt="" style="max-width:100%;margin-left:auto;margin-right:auto;display:block;">
+              </div>
+              <div class="form-group" [hidden]="edittingPoster">
+                <span [innerHTML]="videoDetail.poster" style="word-wrap: break-word;"></span>
+                <input style="display:none" type="file" id="changePoster" (change)="onPosterChange($event , 'poster');edittingPoster = true" accept="image/x-png,image/gif,image/jpeg">
+              </div>
+            </div>
+            <div class="box-footer">
+              <label type="button" [hidden]="edittingPoster" class="btn btn-primary" for="changePoster">{{"Change Poster" | translate}}</label>
+              <label type="button" [hidden]="!edittingPoster" class="btn btn-primary" (click)="onUploadPoster('poster')">{{"Save" | translate}}</label>
+              <label type="button" [hidden]="!edittingPoster" class="btn btn-danger" (click)="edittingPoster = false">{{"Cancel" | translate}}</label>
+            </div>
+          </div>
+        </div>
+        <div class="col-xs-12 col-sm-4 col-md-12">
+          <div class="box box-primary">
+            <div class="overlay" [hidden]="!loading.categories && !loading.detail">
+              <i class="fa fa-refresh fa-spin"></i>
+            </div>
+            <div class="box-header">
+              <h3 class="box-title">{{"Categories" | translate}}</h3>
+            </div>
+            <div class="box-body">
+              <ng-select [(ngModel)]="videoDetail.genres" name="tags" [multiple]="true" [items]="listCategories" placeholder="Click or type to filter"></ng-select>
+            </div>
+          </div>
+        </div>
+        <!-- <div class="col-xs-12 col-sm-4 col-md-12">
+          <div class="box box-primary">
+            <div class="overlay" [hidden]="!loading.tags && !loading.detail">
+              <i class="fa fa-refresh fa-spin"></i>
+            </div>
+            <div class="box-header">
+              <h3 class="box-title">{{"Tags" | translate}}</h3>
+            </div>
+            <div class="box-body">
+              <ng-select [(ngModel)]="videoDetail.tags" name="tags" [multiple]="true" [items]="listTags" placeholder="Click or type to filter"></ng-select>
+            </div>
+          </div>
+        </div> -->
+        <div class="col-xs-12 col-sm-4 col-md-12">
+          <div class="box box-primary">
+            <div class="overlay" [hidden]="!loading.playlist && !loading.detail">
+              <i class="fa fa-refresh fa-spin"></i>
+            </div>
+            <div class="box-header">
+              <h3 class="box-title">{{"Playlist" | translate}}</h3>
+            </div>
+            <div class="box-body">
+              <div [hidden]="videoDetail.playlistId">
+                <label >this video does not exist playlist</label><br/>
+                <a target="_blank" routerLink="/playlist/list">Click to add video to playlist</a>
+              </div>
+              
+              <a [hidden]="!videoDetail.playlistId" target="_blank" routerLink="/playlist/edit/{{videoDetail.playlistId.id}}"><span [innerText]="videoDetail.playlistId.text"></span></a>
+              <!-- <ng-select [(ngModel)]="videoDetail.playlistId" name="tags" [items]="listPlaylist" [allowClear]="true" placeholder="Click or type to filter"></ng-select> -->
+            </div>
+          </div>
+				</div>
+				<div class="col-xs-12 col-sm-4 col-md-12">
+					<div class="box box-primary">
+            <div [hidden]="messageImage.type != 'background' " class="callout" [ngClass]="{'callout-danger': messageImage.status == 'error' , 'callout-success': messageImage.status == 'success' }"
+              *ngIf="messageImage.display">
+              <h4 *ngIf="messageImage.status == 'error' ">Error!</h4>
+              <h4 *ngIf="messageImage.status == 'success' ">Success</h4>
+              <p [innerHTML]="messageImage.text"></p>
+            </div>
+						<div class="overlay" [hidden]="!loading.background && !loading.detail">
+							<i class="fa fa-refresh fa-spin"></i>
+						</div>
+						<div class="box-header">
+							<h3 class="box-title">{{"Cover Photo" | translate}}</h3>
+						</div> 
+						<div class="box-body">
+              <label>Maximum upload file size: {{environment.sizeCoverPhoto.width}}x{{environment.sizeCoverPhoto.height}}px 2MB</label>
+							<div class="form-group" style="text-align: center">
+								<img-cropper [hidden]="!edittingBackground" #cropperBackground [image]="dataBackground" [settings]="cropperSettingsBackground"></img-cropper>
+							</div>
+							<div class="form-group">
+								<img [hidden]="edittingBackground" [src]="videoDetail.backgroundImage" alt="" style="max-width:100%;margin-left:auto;margin-right:auto;display:block;">
+							</div>
+							<div class="form-group" [hidden]="edittingBackground">
+								<span [innerHTML]="videoDetail.backgroundImage" style="word-wrap: break-word;"></span>
+								<input style="display:none" type="file" id="changeBackground" (change)="onPosterChange($event , 'background');edittingBackground = true" accept="image/x-png,image/gif,image/jpeg">
+							</div>
+						</div>
+						<div class="box-footer">
+							<label type="button" [hidden]="edittingBackground" class="btn btn-primary" for="changeBackground">{{"Change Cover Photo" | translate}}</label>
+							<label type="button" [hidden]="!edittingBackground" class="btn btn-primary" (click)="onUploadPoster('background')">{{"Save" | translate}}</label>
+							<label type="button" [hidden]="!edittingBackground" class="btn btn-danger" (click)="edittingBackground = false">{{"Cancel" | translate}}</label>
+						</div>
+					</div>
+				</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- Modal -->
+<div id="replaceVideo" class="modal fade" role="dialog">
+  <div class="modal-dialog modal-lg">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Replace Video</h4>
+      </div>
+      <div class="modal-body box" style="box-shadow:none">
+          <div class="callout" style="margin-top:20px;" [ngClass]="{'callout-danger': messageUploadVideo.status == 'error' , 'callout-success': messageUploadVideo.status == 'success' }"
+          *ngIf="messageUploadVideo.display">
+          <h4 *ngIf="messageUploadVideo.status == 'error' ">Error!</h4>
+          <h4 *ngIf="messageUploadVideo.status == 'success' ">Success</h4>
+          <p [innerHTML]="messageUploadVideo.text"></p>
+        </div> 
+        <form role="form" #uploadVideoForm="ngForm">
+          <div class="form-group" [ngClass]="{'has-error': (!title.valid && title.dirty)  || !nameVideoValidate}">
+            <label>Video name:</label>
+            <div>
+              <label>Video name allowed characters: a-z ,number and -</label>
+            </div>
+            <input style="margin-bottom:10px" type="text" class="form-control"  (keyup)="onChangeNameVideo()" required name="title" [(ngModel)]="uploadVideo.title" #title="ngModel"/>
+            <div [hidden]=" title.valid || !title.dirty" class="help-block">{{"This field is required" | translate}}</div>
+            <span [hidden]="nameVideoValidate || !(title.valid || !title.dirty)" class="help-block">This video name invalid!</span>
+          </div>  
+          <div style="width:100%;height:300px;background:#ddd;position:relative;">
+            <div class="overlay" [hidden]="!loadingUploadVideo" 
+            style="position: absolute;
+              top: 0;
+              left: 0;
+              width: 100%;
+              height: 100%;">
+              <i class="fa fa-refresh fa-spin"></i>
+            </div>
+            <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;">
+              <div [hidden]="fileSelected">
+                <label class="btn btn-primary" for="fileupload">Select video to upload <i style="margin-left:5px;" class="fa fa-upload" aria-hidden="true"></i></label>
+              </div>
+              <div [hidden]="!fileSelected">
+                  <div>
+                    <label style="margin-top:10px;" [innerText]="fileName"></label>
+                  </div>
+                  <button class="btn btn-primary" style="margin:5px;" (click)="onUploadVideo()" [disabled]="!uploadVideoForm.valid || !nameVideoValidate">Upload</button>
+                  <button class="btn btn-danger" style="margin:5px" (click)="fileSelected = false;myInputVariable.nativeElement.value ='' ">Cancel</button>
+              </div>
+            </div>
+          </div>
+          <input #myInput style="display: none" type="file" id="fileupload"  (change)="fileChange($event)"  accept=".mp4, .mov"/>
+          <div class="progress">
+            <div class="progress-bar progress-bar-primary progress-bar-striped" 
+              role="progressbar" 
+              aria-valuemin="0" 
+              aria-valuemax="100" 
+              [ngStyle]="{ 'width' :processing}"> 
+              {{processing}}
+            </div>
+          </div> 
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" (click)="onAbortUploadVideo()">Close</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Modal -->
+<div id="deleteVideo" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-sm">
+  
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Delete Video</h4>
+        </div>
+        <div class="modal-body">
+          <label>Are you sure you want to delete this video?</label>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger pull-left" (click)="onDeleteVideo()">Delete</button>
+          <button type="button" class="btn btn-default" (click)="onCloseDeleteVideo()">Close</button>
+        </div>
+      </div>
+  
+    </div>
+  </div>

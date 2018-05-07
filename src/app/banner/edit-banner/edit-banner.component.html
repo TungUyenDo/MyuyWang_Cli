@@ -1,0 +1,161 @@
+<section class="content-header">
+  <h1>
+    {{ "Banner" | translate }}
+  </h1>
+  <ol class="breadcrumb">
+    <li><a routerLink="/banner">{{ "Banner" | translate }}</a></li>
+    <li class="active">{{ "Edit" | translate }}</li>
+  </ol>
+</section>
+
+
+
+<form *ngIf="listBanner" [formGroup]="editedBannerForm" (submit)="onSave()" class="row content dashboard-page">
+  <div class="col-xs-12 col-md-8">
+    <div class="nav-tabs-custom">
+      <div class="overlay" [hidden]="!loading.title">
+        <i class="fa fa-refresh fa-spin"></i>
+      </div>
+      <ul class="nav nav-tabs">
+        <li class="active" (click)="languageTabs = 'english' "><a href="#revenue-chart" data-toggle="tab" aria-expanded="true">English</a></li>
+        <li class="" (click)="languageTabs = 'chinese' " ><a href="#sales-chart" data-toggle="tab" aria-expanded="false">Chinese</a></li>
+      </ul>
+
+      <div formGroupName="title">
+        <div class="box-body" [hidden]='languageTabs != "english"'>
+          <h3>Language English</h3>
+          <div class="row">
+            <div class="col-xs-12">
+              <div class="form-group" [ngClass]="{'has-error': !editedBannerForm.get('title.en').valid && editedBannerForm.get('title.en').dirty}">
+                <label>Title (en)</label>
+                <ckeditor type="text" debounce="500" [config]="ckeditorConfig" name="titleEn" formControlName="en"></ckeditor>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="box-body" [hidden]='languageTabs != "chinese" '>
+          <h3>Language Chinese</h3>
+          <div class="row">
+            <div class="col-xs-12">
+              <div class="form-group" [ngClass]="{'has-error': !editedBannerForm.get('title.cn').valid && editedBannerForm.get('title.cn').dirty}">
+                <label>Title (en)</label>
+                <ckeditor type="text" debounce="500" [config]="ckeditorConfig" name="titleCn" formControlName="cn"></ckeditor>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="callout" [ngClass]="{'callout-danger': !editedBannerForm.get('title.en').valid}"
+           [hidden]="editedBannerForm.get('title.en').valid || editedBannerForm.get('title.en').value === ' '"
+           *ngIf="onSaveVariable">
+        <h4>Error!</h4>
+        <p>Please fillout the Title in English Language</p>
+      </div>
+
+      <div class="callout" [ngClass]="{'callout-danger': !editedBannerForm.get('title.cn').valid}"
+           [hidden]="editedBannerForm.get('title.cn').valid || editedBannerForm.get('title.cn').value === ' '"
+           *ngIf="onSaveVariable">
+        <h4>Error!</h4>
+        <p>Please fillout the Title in Chinese Language</p>
+      </div>
+
+      <div class="callout" [ngClass]="{'callout-danger': !editedBannerForm.get('imageUrl').valid}"
+           [hidden]="editedBannerForm.get('imageUrl').valid"
+           *ngIf="onSaveVariable">
+        <h4>Error!</h4>
+        <p>Please Select An Image</p>
+      </div>
+      <div class="box-footer">
+        <button type="submit"  class="btn btn-primary pull-left">
+          <span>{{ 'Update' | translate }}</span>
+        </button>
+        <a routerLink="/banner" class="btn btn-danger pull-right">
+          {{ 'Cancel' | translate }}
+        </a>
+      </div>
+    </div>
+  </div>
+  <div class="col-xs-12 col-md-4">
+    <div class="row">
+      <div class="col-xs-12">
+        <div class="box box-primary">
+          <div class="overlay" [hidden]="!loading.detail">
+            <i class="fa fa-refresh fa-spin"></i>
+          </div>
+          <div class="box-header">
+            <h3 class="box-title">{{"Type" | translate}}</h3>
+          </div>
+          <div class="box-body">
+            <select class="form-control" formControlName="type">
+              <option *ngFor='let type of listType' [value]='type'>{{type}}</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="col-xs-12">
+        <div class="box box-primary">
+          <div class="box-header">
+            <h3 class="box-title">{{"Order" | translate}}</h3>
+          </div>
+          <div class="box-body">
+            <select class="form-control" formControlName="order">
+              <option *ngFor='let order of listOrder' [value]='order'>{{order}}</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="col-xs-12">
+        <div class="box box-primary">
+          <div class="overlay" [hidden]="!loading.detail">
+            <i class="fa fa-refresh fa-spin"></i>
+          </div>
+          <div class="box-header">
+            <h3 class="box-title">{{"Link" | translate}}</h3>
+          </div>
+          <div class="box-body">
+            <input type="text" formControlName="link" style="max-width:100%;margin-left:auto;margin-right:auto;display:block;">
+          </div>
+        </div>
+      </div>
+      <div class="col-xs-12 col-md-12">
+        <div class="callout" [ngClass]="{'callout-danger': messageImage.status == 'error' , 'callout-success': messageImage.status == 'success' }"
+             *ngIf="messageImage.display">
+          <h4 *ngIf="messageImage.status == 'error' ">Error!</h4>
+          <h4 *ngIf="messageImage.status == 'success' ">Success</h4>
+          <p [innerHTML]="messageImage.text"></p>
+        </div>
+        <div class="box box-primary">
+          <div class="overlay" [hidden]="!loading.image">
+            <i class="fa fa-refresh fa-spin"></i>
+          </div>
+          <div class="box-header">
+            <h3 class="box-title">{{"Upload Banner" | translate}}</h3>
+          </div>
+          <div class="box-body">
+            <label>Banner size to be ( 1280 x 484p) 2 MB</label>
+            <div [hidden]="edittingBanner">
+              <div class="form-group">
+                <input type="file" id="filePicker" (change)="fileChangeListener($event)" style="max-width:100%;margin-left:auto;margin-right:auto;display:block;">
+              </div>
+              <div class="form-group" style="text-align: center;">
+                <img-cropper #cropper [image]="data" [settings]="cropperSettings" style="max-width:100%;margin-left:auto;margin-right:auto;display:block;"></img-cropper>
+              </div>
+              <div class="form-group">
+                <img [src]="data.image" alt="" style="max-width:100%;margin-left:auto;margin-right:auto;display:block;">
+              </div>
+            </div>
+            <div class="form-group" *ngIf="edittingBanner">
+              <img [src]="data.image" alt="" style="max-width:100%;margin-left:auto;margin-right:auto;display:block;">
+            </div>
+          </div>
+          <div class="box-footer">
+            <label type="button" *ngIf="edittingBanner" class="btn btn-primary" (click)="edittingBanner = false">{{"Change Banner" | translate}}</label>
+            <label type="button" *ngIf="!edittingBanner && data.image" class="btn btn-primary" (click)="onSaveCroppedImage()">{{"Save" | translate}}</label>
+            <label type="button" *ngIf="!edittingBanner && data.image" class="btn btn-danger" (click)="edittingBanner = false">{{"Cancel" | translate}}</label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>

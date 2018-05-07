@@ -1,0 +1,142 @@
+<section class="content-header">
+    <h1>
+      {{ "Categories" | translate }}
+    </h1> 
+    <ol class="breadcrumb">
+        <li><a routerLink="/category"><i class="fa fa-dashboard"></i>{{ "Categories" | translate }}</a></li>
+        <li *ngIf="type == 'create' "class="active"> {{ "Create Category" | translate }}</li>
+        <li *ngIf="type == 'edit' " class="active">{{ "Edit Category" | translate }}</li>
+    </ol>
+  </section>
+  
+  <!-- Main content -->
+  <section class="content dashboard-page">
+    <form #EditCategoryFrom="ngForm">
+        <div class="row">
+            <div class="col-xs-12 col-md-8">
+                <div class="box nav-tabs-custom" style="border-top:none"> 
+                    <ul class="nav nav-tabs">
+                        <li class="active" (click)="languageTabs = 'english' "><a href="#revenue-chart" data-toggle="tab" aria-expanded="true">English</a></li>
+                        <li class="" (click)="languageTabs = 'chinese' " ><a href="#sales-chart" data-toggle="tab" aria-expanded="false">Chinese</a></li>
+                    </ul>
+                    <div class="overlay" [hidden]="!loading">
+                        <i class="fa fa-refresh fa-spin"></i>
+                    </div>
+                    <div class="box-header with-border">
+                        <h4 *ngIf="type == 'create' " class="pull-left"> {{ "Create Category" | translate }}</h4>
+                        <h4 *ngIf="type == 'edit' " class="pull-left">{{ "Edit Category" | translate }}</h4>
+                    </div>
+                    <div class="box-body">
+                        <div class="callout callout-danger" *ngIf="message.slugExist">
+                            <h4>Error!</h4>
+                            <p>Category with this slug already exists. Try again with a new slug</p>
+                        </div>
+                        <div class="callout callout-success" *ngIf="message.success">
+                            <h4>Success!</h4>
+                            <p>Category create successfully</p>
+                        </div>
+                        <div class="callout callout-success" *ngIf="message.updateSuccess">
+                            <h4>Success!</h4>
+                            <p>Category update successfully</p>
+                        </div>
+                        <div [hidden]='languageTabs != "english" '>
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <div class="form-group" [ngClass]="{'has-error': !titleEn.valid && titleEn.dirty}">
+                                        <label>Title (en)</label>
+                                        <input type="text" class="form-control" placeholder="Enter Title..." 
+                                            required
+                                            name="titleEn"
+                                            [(ngModel)]="category.title.en"
+                                            #titleEn="ngModel"/>
+                                        <div [hidden]="titleEn.valid || !titleEn.dirty" class="help-block">this field is required</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <div class="form-group" [ngClass]="{'has-error': !descriptionEn.valid && descriptionEn.dirty}">
+                                        <label>Description (en)</label>
+                                        <textarea class="form-control" rows="3" placeholder="Enter Description..." style="resize: none"
+                                            required
+                                            name="descriptionEn"
+                                            [(ngModel)]="category.description.en"
+                                            #descriptionEn="ngModel" ></textarea>
+                                        <div [hidden]="descriptionEn.valid || !descriptionEn.dirty" class="help-block">this field is required</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div [hidden]='languageTabs != "chinese" '>
+                            <div class="row" >
+                                <div class="col-xs-12">
+                                    <div class="form-group" [ngClass]="{'has-error': !titleCn.valid && titleCn.dirty}">
+                                        <label>Title (cn)</label>
+                                        <input type="text" class="form-control" placeholder="Enter Title..." 
+                                            name="titleCn"
+                                            [(ngModel)]="category.title.cn"
+                                            #titleCn="ngModel" /> 
+                                        <div [hidden]="titleCn.valid || !titleCn.dirty" class="help-block">this field is required</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <div class="form-group"  [ngClass]="{'has-error': !descriptionCn.valid && descriptionCn.dirty}">
+                                        <label>Description (cn)</label>
+                                        <textarea class="form-control" rows="3" placeholder="Enter Description..." style="resize: none"
+                                            name="descriptionCn"
+                                            [(ngModel)]="category.description.cn"
+                                            #descriptionCn="ngModel"></textarea>
+                                        <div [hidden]="descriptionCn.valid || !descriptionCn.dirty" class="help-block">this field is required</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row" *ngIf="type == 'create' ">
+                            <div class="col-xs-12">
+                                <div class="form-group" [ngClass]="{'has-error': !slug.valid && slug.dirty}">
+                                    <label>Slug</label>
+                                    <input type="text" class="form-control" placeholder="Enter Slug..."
+                                        required
+                                        name="slug"
+                                        #slug="ngModel"
+                                        [(ngModel)]="category.slug"/>
+                                    <div [hidden]="slug.valid || !slug.dirty" class="help-block">this field is required</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-footer"> 
+                        <button type="button" (click)="onSubmit()" [disabled]="!EditCategoryFrom.form.valid" class="btn btn-primary pull-left">
+                            <span *ngIf="type == 'create' ">{{ 'Submit' | translate}}</span>
+                            <span *ngIf="type == 'edit' ">{{ 'Update' | translate}}</span>
+                        </button>
+                        <a routerLink="/category" class="btn btn-danger pull-right">
+                            {{ 'Cancel' | translate }}
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-12 col-md-4">
+                <div class="box box-primary">
+                    <div class="overlay" [hidden]="!loading">
+                        <i class="fa fa-refresh fa-spin"></i>
+                    </div>
+                    <div class="box-body">
+                        <div class="form-group">
+                            <label>Status</label>
+                            <select class="form-control" 
+                                name="isActive"
+                                #isActive="ngModel"
+                                [(ngModel)]="category.isActive">
+                                <option value="1">Active</option>
+                                <option value="0">Inactive</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+  </section>

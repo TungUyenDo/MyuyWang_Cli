@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>MyYuwang CMS</title>
+	<base href="/">
+	<!-- Tell the browser to be responsive to screen width -->
+	<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+	<link rel="stylesheet" href="./assets/styles/vendor/bootstrap.min.css">
+
+	<link rel="icon" type="image/x-icon" href="./assets/img/icon.png" />
+
+
+	<!-- Font Awesome -->
+	<link rel="stylesheet" href="./assets/styles/vendor/font-awesome.min.css">
+	<!-- Ionicons -->
+	<link rel="stylesheet" href="./assets/styles/vendor/ionicons.min.css">
+	<!-- Theme style -->
+	<link rel="stylesheet" href="./assets/styles/vendor/AdminLTE.min.css">
+	<!-- AdminLTE Skins. Choose a skin from the css/skins folder instead of downloading all of them to reduce the load. -->
+	<link rel="stylesheet" href="./assets/styles/vendor/_all-skins.min.css">
+	<!-- iCheck -->
+	  <link rel="stylesheet" href="./assets/plugins/iCheck/square/blue.css">
+
+  	<link rel="stylesheet" href="./assets/plugins/select2/select2.min.css">
+
+
+	<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+	<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+	<!--[if lt IE 9]>-->
+	<!-- <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script> -->
+	<!-- <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script> -->
+	<!--[endif]-->
+	<script src="https://cdn.ckeditor.com/4.6.1/full/ckeditor.js"></script>
+	<script src="http://cdn.ckeditor.com/4.5.11/full-all/plugins/divarea/plugin.js"></script>
+	<!-- Google Font -->
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+</head>
+<body class="hold-transition skin-blue sidebar-mini login-page">
+	<app-root></app-root>
+
+	<!-- REQUIRED JS SCRIPTS -->
+	<script>
+		__Zone_enable_cross_context_check = true;
+	</script>
+	<!-- jQuery 3 -->
+	<script src="./assets/scripts/vendor/jquery.min.js"></script>
+	<!-- AdminLTE App -->
+	<script src="./assets/scripts/vendor/adminlte.min.js"></script>
+	<!-- iCheck -->
+	<script src="./assets/plugins/iCheck/icheck.min.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>
+	<script>
+	  $(function () {
+	  	if($('input[type="checkbox"]').length || $('input[type="radio"]').length) {
+	  		$('input[type="checkbox"]', 'input[type="radio"]').iCheck({
+		      checkboxClass: 'icheckbox_square-blue',
+		      radioClass: 'iradio_square-blue',
+		      increaseArea: '20%' // optional
+		    });
+	  	}
+	  });
+	</script>
+</body>
+</html>

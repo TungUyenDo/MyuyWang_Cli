@@ -1,0 +1,89 @@
+<section class="content-header">
+  <h1>
+    {{ "Static Articles" | translate }}
+  </h1>
+  <ol class="breadcrumb">
+      <li><a routerLink=""><i class="fa fa-dashboard"></i>{{ "Home" | translate }}</a></li>
+      <li class="active">{{ "List Static Articles" | translate }}</li>
+  </ol>
+</section>
+
+<!-- Main content -->
+<section class="content dashboard-page">
+  <div class="row">
+      <div class="col-xs-12">
+          <div class="box box-primary"> 
+              <div class="overlay" [hidden]="!loading">
+                <i class="fa fa-refresh fa-spin"></i>
+              </div>
+              <div class="callout"  [ngClass]="{'callout-danger': message.status == 'fail' , 'callout-success': message.status == 'success' }" *ngIf="message.display">
+                  <h4 *ngIf="message.status == 'fail' ">Error!</h4>
+                  <h4 *ngIf="message.status == 'success' ">Success</h4>
+                  <p [innerHTML]="message.text"></p>
+              </div>
+              <!-- <div class="callout callout-success" *ngIf="message.success">
+                  <h4>Success!</h4>
+                  <p>Static Article create successfully</p>
+              </div> -->
+              <div class="box-header with-border">
+                  <h4 class="pull-left">{{ "List Static Articles" | translate }}</h4>
+                  <!-- <a routerLink="/static-article/create" class="btn btn-primary pull-right">
+                    {{ "Create" | translate }}
+                  </a> -->
+              </div>
+              <div class="box-body" style="padding-top:25px">
+                <table class="table table-striped table-border"  datatable [dtTrigger]="dtTrigger">
+                  <thead>
+                    <tr>
+                      <th>{{ 'Id' | translate }}</th>
+                      <th>{{ 'Title' | translate }}</th>
+                      <th>{{ 'Description' | translate }}</th>
+                      <!-- <th>{{ 'Hit' | translate }}</th> -->
+                      <th>{{ 'Create at' | translate }}</th>
+                      <th>{{ 'Modifield at' | translate }}</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let item of listStaticArticle">
+                      <td [innerHTML]="item.id"></td>
+                      <td [innerHTML]="resSwitchLanguage == 'en' ? item.title.en : item.title.cn"></td>
+                      <td [innerHTML]="resSwitchLanguage == 'en' ? item.description.en : item.description.cn "></td>
+                      <!-- <td>
+                          Hit
+                      </td> -->
+                      <td [innerHTML]="item.createddAt"></td>
+                      <td [innerHTML]="item.updatedAt"></td>
+                      <td style="text-align: right">
+                        <a routerLink="/static-article/edit/{{item.id}}" class="btn btn-primary">{{ 'Detail' | translate }}</a>
+                        <!-- <button type="button" class="btn btn-danger" (click)="onOpenModal(item)"  data-toggle="modal" data-target="#myModal">{{ 'Delete' | translate }}</button> -->
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+          </div>
+      </div>
+  </div>
+</section>
+<!-- Modal -->
+<div id="static-article-modal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Delete </h4>
+      </div>
+      <div class="modal-body">
+        <p>Are you sure you want to delete item "<span [innerHTML]="resSwitchLanguage == 'en' ? selectedArticle.title.en : selectedArticle.title.cn"></span>" ?</p>
+      </div>
+      <div class="modal-footer">
+        <!-- <button type="button" (click)="onDeleteStaticArticle()" class="btn btn-danger">Delete</button> -->
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+
+  </div>
+</div>

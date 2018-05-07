@@ -1,0 +1,143 @@
+<section class="content-header">
+	<h1>
+		{{ "Videos" | translate }}
+	</h1>
+	<ol class="breadcrumb">
+		<li><a routerLink=""><i class="fa fa-dashboard"></i>{{ "Home" | translate }}</a></li>
+		<li class="active">{{ "Videos" | translate }}</li>
+	</ol>
+</section>
+
+<section class="content">
+	<div class="row">
+		<div class="col-xs-12">
+			<div class="box box-primary">
+				<div class="overlay" [hidden]="!loading">
+					<i class="fa fa-refresh fa-spin"></i>
+				</div>
+				<div class="box-header">
+					<div class="row">
+						<div class="col-xs-12 col-sm-3">
+							<div class="form-group">
+								<label>Categories</label>
+								<select class="form-control" (change)='onChangeFilterCategories($event.target)' name="filterCategories"
+                        [(ngModel)]='filterCategories'>
+									<option value="all" selected>All Categories</option>
+									<option *ngFor='let category of listCategories' [ngValue]='category.slug' [innerText]="resSwitchLanguage == 'en' ? category.title.en : category.title.cn"></option>
+								</select>
+							</div>
+						</div>
+						<!-- <div class="col-xs-12 col-sm-3">
+							<div class="form-group">
+								<label>Tags</label>
+								<select class="form-control" (change)='onChangeFilterCategories($event.target)' name="filterTags" [(ngModel)]='filterTags'>
+									<option value="all" selected>All Tags</option>
+									<option *ngFor='let tag of listTags' [ngValue]='tag.title' [innerText]="tag.title"></option>
+								</select>
+							</div>
+						</div> -->
+						<div class="col-xs-12 col-sm-3">
+							<div class="form-group">
+								<label>Type of Video</label>
+								<select class="form-control" (change)='onChangeFilterCategories($event.target)' name="filterType" [(ngModel)]='filterType'>
+									<option value="all" selected>All Type of Video</option>
+									<option value="0">{{"Public Video" | translate}}</option>
+									<option value="1">{{"Private Video" | translate}}</option>
+									<option value="2">{{"Partial Private video" | translate}}</option>
+								</select>
+							</div>
+						</div>
+						<div class="col-xs-12 col-sm-3">
+							<div class="form-group">
+								<label>Status</label>
+								<select class="form-control" (change)='onChangeFilterCategories($event.target)' name="filterStatus" [(ngModel)]='filterStatus'>
+									<option value="all" selected>All Status</option>
+									<option [ngValue]="true">{{"Active" | translate}}</option>
+                  					<option [ngValue]="false">{{"Inactive" | translate}}</option>
+								</select>
+							</div>
+						</div>
+						<div class="col-xs-12 col-sm-3">
+							<div class="form-group">
+								<label>Processing Status</label>
+								<select class="form-control" (change)='onChangeFilterCategories($event.target)' name="filterProcessingStatus" [(ngModel)]='filterProcessingStatus'>
+									<option value="all" selected>All</option>
+									<option [ngValue]="true">{{"Processed" | translate}}</option>
+									<option [ngValue]="false">{{"Not Processed" | translate}}</option>
+								</select>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="box-body" style="overflow-x:auto">
+					<div class="callout" style="margin-top:20px;" [ngClass]="{'callout-danger': message.status == 'error' , 'callout-success': message.status == 'success' }"
+						*ngIf="message.display">
+						<h4 *ngIf="message.status == 'error' ">Error!</h4>
+						<h4 *ngIf="message.status == 'success' ">Success</h4>
+						<p [innerHTML]="message.text"></p>
+					</div>
+					<a class="btn btn-primary" style="float:right;margin-bottom:10px;" routerLink="/video/upload">Upload Video</a>
+					<div style="clear:both"></div>
+					<table datatable [dtTrigger]="dtTrigger" class="table table-bordered table-striped">
+						<thead>
+							<tr>
+								<th>{{ 'Poster' | translate }}</th>
+								<th>{{ 'Title' | translate }}</th>
+								<!-- <th>{{ 'Summary' | translate }}</th> -->
+								<!-- <th>{{ 'Video' | translate }}</th> -->
+								<th>{{ 'Views' | translate }}</th>
+								<th>{{ 'Created' | translate }}</th>
+								<th>{{ 'Updated' | translate }}</th>
+								<!-- <th>{{ 'Tags' | translate }}</th> -->
+								<th>{{ 'Genres' | translate }}</th>
+								<th>{{ 'Type' | translate }}</th>
+								<th>{{ 'Status' | translate }}</th>
+								<th></th>
+								<th></th>
+								<th></th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr *ngFor="let item of listVideo">
+								<td>
+									<a routerLink="/video/edit/{{item.id}}">
+										<img src="{{item.poster}}" alt="" style="max-width:100px;max-height:100px">
+									</a>
+								</td>
+								<td>
+									<a href="{{pathUrlFrontEnd}}/video/{{item.slug}}">
+										<span [innerHTML]="resSwitchLanguage == 'en' ? item.title.en : item.title.cn" ></span>
+									</a>
+								</td>
+								<!-- <td [innerHTML]="resSwitchLanguage == 'en' ? item.summary.en : item.summary.cn"></td>  -->
+								<!-- <td><a href="{{item.video}}">{{item.video}}</a></td> -->
+								<td>{{item.views}}</td>
+								<td>{{item.createdAt}}</td>
+								<td>{{item.updatedAt}}</td>
+								<!-- <td>
+									<div *ngFor="let tag of item.tags" [innerHTML]="tag"></div>
+								</td> -->
+								<td>
+									<div *ngFor="let genre of item.genres" [innerText]="resSwitchLanguage == 'en' ? genre.title.en : genre.cn "></div>
+								</td>
+								<td>
+									<div *ngIf="item.isPrivate == '0' ">Public Video</div>
+									<div *ngIf="item.isPrivate == '1' ">Private Video</div>
+									<div *ngIf="item.isPrivate == '2' ">Partial Private video</div>
+								</td>
+								<td>
+									<div *ngIf="item.status == true ">Active</div>
+									<div *ngIf="item.status == false ">Inactive</div>
+								</td>
+								<td><a target="_blank" class="btn btn-primary" href="{{changeHrefFacebookDebug(item.slug)}}">{{ 'Clear FB 1' | translate }}</a></td>
+								<td><a target="_blank" class="btn btn-primary" href="{{changeHrefFacebookDebug2(item.slug)}}">{{ 'Clear FB 2' | translate }}</a></td>
+								<td><a target="_blank" class="btn btn-primary" (click)="onClickClearCloundFont(item.slug)">{{ 'Clear Cache CloudFront' | translate }}</a></td>
+								<td><a class="btn btn-primary" routerLink="/video/edit/{{item.id}}">{{ 'Detail' | translate }}</a></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>

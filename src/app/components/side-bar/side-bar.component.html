@@ -1,0 +1,82 @@
+<!-- Left side column. contains the logo and sidebar -->
+<aside class="main-sidebar">
+
+  <!-- sidebar: style can be found in sidebar.less -->
+  <section class="sidebar">
+    <!-- Sidebar Menu -->
+    <ul class="sidebar-menu" data-widget="tree">
+      <li class="header">MENU</li>
+      <!-- Optionally, you can add icons to the links -->
+      <li><a routerLink="/video"><i class="fa fa-film" aria-hidden="true"></i> <span>{{ "Videos" | translate }}</span></a></li>
+      <!-- <li class="treeview">
+        <a href="#"><i class="fa fa-link"></i> <span>{{ "Users" | translate }}</span>
+          <span class="pull-right-container">
+            <i class="fa fa-angle-left pull-right"></i>
+          </span>
+        </a>
+        <ul class="treeview-menu">
+          <li><a routerLink="/user">{{ "Listing" | translate }}</a></li>
+          <li><a routerLink="/user/create">{{ "Create" | translate }}</a></li>
+        </ul>
+      </li> -->
+      <li class="treeview">
+        <a href="#"><i class="fa fa-tasks" aria-hidden="true"></i> <span>{{ "Categories" | translate }}</span>
+          <span class="pull-right-container">
+            <i class="fa fa-angle-left pull-right"></i>
+          </span>
+        </a>
+        <ul class="treeview-menu">
+          <li><a routerLink="/category">{{ "Listing" | translate }}</a></li>
+          <li><a routerLink="/category/create">{{ "Create" | translate }}</a></li>
+        </ul>
+      </li>
+      <li class="treeview">
+        <a routerLink="/member/list"><i class="fa fa-users" aria-hidden="true"></i> <span>{{ "Member" | translate }}</span>
+        </a>
+      </li>
+      <li class="treeview">
+        <a href="#"><i class="fa fa-picture-o" aria-hidden="true"></i> <span>{{ "Banner" | translate }}</span>
+          <span class="pull-right-container">
+            <i class="fa fa-angle-left pull-right"></i>
+          </span>
+        </a>
+        <ul class="treeview-menu">
+          <li><a routerLink="/banner">{{ "Listing" | translate }}</a></li>
+          <li><a routerLink="/banner/create">{{ "Create" | translate }}</a></li>
+        </ul>
+      </li>
+      <!-- <li class="treeview">
+        <a routerLink="/tag"><i class="fa fa-tags" aria-hidden="true"></i> <span>{{ "Tags" | translate }}</span>
+        </a>
+      </li> -->
+      <li class="treeview">
+        <a routerLink="/static-article/list"><i class="fa fa-newspaper-o" aria-hidden="true"></i> <span>{{ "Static Articles" | translate }}</span>
+          <!-- <span class="pull-right-container">
+            <i class="fa fa-angle-left pull-right"></i>
+          </span> -->
+        </a>
+        <!-- <ul class="treeview-menu">
+          <li><a routerLink="/static-article">{{ "Listing" | translate }}</a></li>
+          <li><a routerLink="/static-article/create">{{ "Create" | translate }}</a></li>
+        </ul> -->
+      </li>
+      <li class="treeview">
+        <a href="#"><i class="fa fa-list" aria-hidden="true"></i> <span>{{ "Playlist" | translate }}</span>
+          <span class="pull-right-container">
+            <i class="fa fa-angle-left pull-right"></i>
+          </span>
+        </a>
+        <ul class="treeview-menu">
+          <li><a routerLink="/playlist">{{ "Listing" | translate }}</a></li>
+          <li><a routerLink="/playlist/create">{{ "Create" | translate }}</a></li>
+        </ul>
+      </li>
+      <li class="treeview">
+        <a routerLink="/faq"><i class="fa fa-tags" aria-hidden="true"></i> <span>{{ "FAQ" | translate }}</span>
+        </a>
+      </li>
+    </ul>
+    <!-- /.sidebar-menu -->
+  </section>
+  <!-- /.sidebar -->
+</aside>
